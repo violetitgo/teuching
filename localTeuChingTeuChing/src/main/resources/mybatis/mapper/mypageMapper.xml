@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Mypage">
+
+	<!-- 일반회원  세션값 다시 넣기 -->
+	<select id="m_newlogin" resultMap="memberResult">
+		select *
+		from TR_MEMBER where MEM_EMAIL = #{email}
+	</select>
+	<resultMap id="memberResult" type="Member">
+ 		<result column ="IS_LEAVE_YN" property="leave_yn"/>
+ 	</resultMap>
+	 	
+ 	<!-- 트레이너 세션값 다시 넣기 -->
+	<select id="t_newlogin" resultMap="t_loginMap">
+		select *
+		from TR_TRAINER where TR_EMAIL = #{email}
+	</select>
+ 	<resultMap id="t_loginMap" type="Trainer">
+ 		<result column ="trainer_name" property="trainerName"/>
+ 		<result column ="IS_LEAVE_YN" property="leave_yn"/>
+ 	</resultMap>
+ 	
+ 	<!-- 일반회원 회원정보 수정 -->
+ 	<update id="update_mypage_M">
+		UPDATE TR_MEMBER set GENDER = #{gender},
+		CELL = #{cell}, ADDRESS = #{address}
+		[WHERE MEM_EMAIL = #{email}]
+	</update>
+	
+ 	<!-- 트레이너 회원정보 수정 -->
+ 	<update id="update_mypage_T">
+		UPDATE TR_TRAINER set 
+		cell = #{cell}, GENDER = #{gender}, WEIGHT = #{weight},	HEIGHT = #{height},
+		ADDRESS = #{address}, ADDRESS_DETAIL = #{address_detail}, PREFER_ADD1 = #{prefer1},
+		 PREFER_ADD2 = #{prefer2}, PREFER_ADD3 = #{prefer3}, CAREER = #{career}, PURPOSE_KEYWORD = #{keyword}
+		[where TR_EMAIL = #{email}]
+	</update>
+	
+	<!-- 일반회원 회원탈퇴 -->
+	<update id="m_out">
+		update TR_MEMBER set IS_LEAVE_YN = 'Y' where MEM_EMAIL = #{email} and PASSWORD = #{password}
+	</update>
+	
+ 	<!-- 트레이너 회원탈퇴 -->
+	<update id="t_out">
+		update TR_TRAINER set IS_LEAVE_YN = 'Y' where TR_EMAIL = #{email} and PASSWORD = #{password}
+	</update>
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+</mapper>

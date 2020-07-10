@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Message">
+	<insert id="insertMatchMessage" parameterType="Message">
+		INSERT INTO
+				TR_MESSAGE
+		VALUES(
+				0
+				, #{tr_email}
+				, #{mem_email}
+				, #{msg_cont}
+				, SYSDATE()
+				, 'Member'
+				, #{trainer_name}
+				, #{nick_name}
+		)
+	</insert>
+	
+	<insert id="insertMatch" parameterType="Match">
+		INSERT INTO
+				TR_MATCH
+		VALUES(
+				0
+				, #{tr_email}
+				, #{mem_email}
+				, #{match_date}
+				, #{match_time}
+				,'N'
+		)
+	</insert>
+	
+	
+	<select id="selectMsgBoxSend" resultType="Message">
+		SELECT 
+			* 
+		FROM
+			TR_MESSAGE
+		<where>
+			TR_EMAIL = #{email}
+				<if test='type.equals("Trainer")'>
+				AND
+					WRITER = 'Trainer'
+				</if>
+				<if test='type.equals("Member")'>
+				AND
+					WRITER = 'Member'
+				</if>
+			OR 
+			MEM_EMAIL = #{email}
+				<if test='type.equals("Trainer")'>
+				AND
+					WRITER = 'Trainer'
+				</if>
+				<if test='type.equals("Member")'>
+				AND
+					WRITER = 'Member'
+				</if>
+		</where>
+		ORDER BY 
+			WRITE_DATE DESC
+		LIMIT
+			${paging.start}, ${paging.cntPerPage}
+	</select>
+	
+	<select id="selectMsgBoxRecv" resultType="Message">
+		SELECT
+			*
+		FROM
+			TR_MESSAGE
+		<where>
+			MEM_EMAIL = #{email}
+				<if test='type.equals("Trainer")'>
+				AND
+					WRITER = 'Member'
+				</if>
+				<if test='type.equals("Member")'>
+				AND
+					WRITER = 'Trainer'
+				</if>
+			OR
+			TR_EMAIL = #{email}
+				<if test='type.equals("Trainer")'>
+				AND
+					WRITER = 'Member'
+				</if>
+				<if test='type.equals("Member")'>
+				AND
+					WRITER = 'Trainer'
+				</if>
+		</where>
+		ORDER BY
+			WRITE_DATE DESC
+		LIMIT
+			${paging.start}, ${paging.cntPerPage}
+	</select>
+	
+	<select id="selectSendMsgCnt" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TR_MESSAGE
+		<where>
+				TR_EMAIL = #{email}
+					<if test='type.equals("Trainer")'>
+					AND
+						WRITER = 'Trainer'
+					</if>
+					<if test='type.equals("Member")'>
+					AND
+						WRITER = 'Member'
+					</if>
+				OR 
+				MEM_EMAIL = #{email}
+					<if test='type.equals("Trainer")'>
+					AND
+						WRITER = 'Trainer'
+					</if>
+					<if test='type.equals("Member")'>
+					AND
+						WRITER = 'Member'
+					</if>
+		</where>
+	</select>
+	
+	<select id="selectRecvMsgCnt" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TR_MESSAGE
+		<where>
+			MEM_EMAIL = #{email}
+				<if test='type.equals("Trainer")'>
+				AND
+					WRITER = 'Member'
+				</if>
+				<if test='type.equals("Member")'>
+				AND
+					WRITER = 'Trainer'
+				</if>
+			OR
+			TR_EMAIL = #{email}
+				<if test='type.equals("Trainer")'>
+				AND
+					WRITER = 'Member'
+				</if>
+				<if test='type.equals("Member")'>
+				AND
+					WRITER = 'Trainer'
+				</if>
+		</where>
+	</select>
+	
+	<select id="selectMsgDetail" resultType="Message">
+		SELECT
+			*
+		FROM
+			TR_MESSAGE
+		WHERE
+			MESSAGE_IDX = #{message_idx}
+	</select>
+	
+	<select id="insertMsgTra">
+		INSERT INTO
+				TR_MESSAGE
+		VALUES(
+				0
+				, #{tr_email}
+				, #{mem_email}
+				, #{msg_cont}
+				, SYSDATE()
+				, 'Trainer'
+				, #{trainer_name}
+				, #{nick_name}
+		)
+	</select>
+	
+	<select id="showMatchInfo" resultType="Match">
+		SELECT
+			*
+		FROM
+			TR_MATCH
+		WHERE
+			TR_EMAIL = #{tr_email}
+			AND
+			MEM_EMAIL = #{mem_email}
+		ORDER BY
+			MATCH_DATE DESC
+	</select>
+	
+	<update id="updateMatchYn" parameterType="int">
+		UPDATE
+			TR_MATCH
+		SET
+			MATCH_YN = 'Y'
+		WHERE
+			MATCH_IDX = #{match_idx}
+	</update>
+	
+	<select id="matchYnCheck" parameterType="int" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			TR_MATCH
+		WHERE
+			MATCH_IDX = #{match_idx}
+			AND
+			MATCH_YN = 'N'
+	</select>
+	
+	<insert id="insertMsgMem" parameterType="Message">
+		INSERT INTO
+				TR_MESSAGE
+		VALUES(
+				0
+				, #{tr_email}
+				, #{mem_email}
+				, #{msg_cont}
+				, SYSDATE()
+				, 'Member'
+				, #{trainer_name}
+				, #{nick_name}
+		)
+	</insert>
+	
+	<select id="selectTraName" resultType="string">
+		SELECT
+			TRAINER_NAME
+		FROM
+			TR_TRAINER
+		WHERE
+			TR_EMAIL = #{tr_email}
+	</select>
+	
+	<insert id="insertManagerMessageToTra" parameterType="Message">
+		INSERT INTO
+				TR_MESSAGE
+		VALUES(
+				0
+				, #{tr_email}
+				, 'teuching.official@gmail.com'
+				, '트레이너에 대한 신고가 접수되어 운영자 측에서 확인해본 결과 경고 처리 되셨습니다. 프로필란에 경고 문구가 띄워집니다'
+				, SYSDATE()
+				, 'Member'
+				, #{trainer_name}
+				, '관리자'
+		)
+	</insert>
+	
+	<insert id="insertManagerMessageToMem" parameterType="Message">
+		INSERT INTO
+				TR_MESSAGE
+		VALUES(
+				0
+				, 'teuching.official@gmail.com'
+				, #{mem_email}
+				, '올리신 리뷰에 대한 신고가 접수되어 운영자 측에서 확인해본 결과 해당 게시물이 삭제 되었습니다'
+				, SYSDATE()
+				, 'Trainer'
+				, '관리자'
+				, #{nick_name}
+		)
+	</insert>
+	
+	<!-- 이거 리뷰매퍼로 옮겨야돼!!!!!!!! -->
+	<delete id="deleteReview" parameterType="int">
+		DELETE
+			TR_REVIEW
+		WHERE
+			REVIEW_IDX = #{review_idx}
+	</delete>
+	<!-- 이것도!!!!!!!!!!!!!!!! -->
+	<select id="selectReviewIdx" resultType="int">
+		SELECT
+			REVIEW_IDX
+		FROM
+			TR_REVIEW
+		WHERE
+			MEM_NICKNAME = #{nick_name}
+			AND
+			TR_EMAIL = #{tr_email}
+	</select>
+	
+	<select id="selectNickName" resultType="string">
+		SELECT
+			NICKNAME
+		FROM
+			TR_MEMBER
+		WHERE
+			MEM_EMAIL = #{mem_email}
+	</select>
+
+</mapper>

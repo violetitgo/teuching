@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.borajoin.teuching.manager.model.vo.ReviewReport" alias="ReviewReport" />
+		<typeAlias type="com.borajoin.teuching.member.model.vo.Member" alias="Member" />
+		<typeAlias type="com.borajoin.teuching.member.model.vo.Trainer" alias="Trainer" />
+		<typeAlias type="com.borajoin.teuching.matching.model.vo.Post" alias="Post" />
+		<typeAlias type="com.borajoin.teuching.manager.model.vo.TrainerReport" alias="TrainerReport" />
+		<typeAlias type="common.util.File_Upload" alias="File_Upload" />
+		<typeAlias type="com.borajoin.teuching.manager.model.vo.Quali" alias="Quali" />
+		<typeAlias type="com.borajoin.teuching.message.model.vo.Message" alias="Message" />
+		<typeAlias type="com.borajoin.teuching.review.model.vo.Review" alias="Review" />
+		<typeAlias type="com.borajoin.teuching.notice.model.vo.Notice" alias="Notice" />
+		<typeAlias type="com.borajoin.teuching.message.model.vo.Match" alias="Match" />
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="/mybatis/mapper/managerMapper.xml" />
+		<mapper resource="/mybatis/mapper/matchingMapper.xml" />
+		<mapper resource="/mybatis/mapper/memberMapper.xml" />
+		<mapper resource="/mybatis/mapper/fileMapper.xml" />
+		<mapper resource="/mybatis/mapper/messageMapper.xml" />
+		<mapper resource="/mybatis/mapper/reviewMapper.xml" />
+		<mapper resource="/mybatis/mapper/noticeMapper.xml" />
+		<mapper resource="/mybatis/mapper/mypageMapper.xml" />
+	</mappers>
+</configuration>

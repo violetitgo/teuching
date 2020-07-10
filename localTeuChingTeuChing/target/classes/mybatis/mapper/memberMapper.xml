@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Member">
+
+
+	<!-- 일반멤버 회원가입 -->
+	<insert id="joinMember">
+		insert into TR_MEMBER VALUES(#{email}, #{password}, #{nickname}, #{gender}, #{cell}, #{address}, 'N', 'N')
+	</insert>
+	
+	<!-- 트레이너 회원가입 -->
+	<insert id="joinTrainer">
+		insert into TR_TRAINER VALUES(#{email}, #{password}, #{name}, #{gender}, #{weight}, #{height}
+				, #{cell}, #{career}, #{address}, #{address_detail}, #{prefer1}, #{prefer2}, #{prefer3}, #{photo}, #{keyword}, 0, 'N', 'N')
+	</insert>
+	
+	<!-- 일반회원 닉네임 중복 체크 -->
+	<select id="nickChk" resultType="int">
+		select count(*) from TR_MEMBER where NICKNAME = #{nickname}
+	</select>
+	
+	<!--회원 이메일 중복 체크 Mapper -->
+	<select id="emailChk" resultType="int">
+		select count(*) from ${table} where
+		<if test='table=="TR_TRAINER"'>
+			TR_EMAIL = #{email}
+		</if>
+		<if test='table=="TR_MEMBER"'>
+			MEM_EMAIL = #{email}
+		</if>
+	</select>
+	
+	<!-- 일반회원 로그인 -->
+	<select id="m_login" resultMap="memberResult">
+		select *
+		from TR_MEMBER where MEM_EMAIL = #{email} and PASSWORD = #{password}
+	</select>
+	<resultMap id="memberResult" type="Member">
+ 		<result column ="IS_LEAVE_YN" property="leave_yn"/>
+ 	</resultMap>
+	 	
+ 	<!-- 트레이너 로그인 -->
+	<select id="t_login" resultMap="trainerResult">
+		select *
+		from TR_TRAINER where TR_EMAIL = #{email} and PASSWORD = #{password}
+	</select>
+ 	<resultMap id="trainerResult" type="Trainer">
+ 		<result column ="trainer_name" property="trainerName"/>
+ 		<result column ="IS_LEAVE_YN" property="leave_yn"/>
+ 		<result column ="PURPOSE_KEYWORD" property="purpose_keyword"/>
+ 	</resultMap>
+ 	
+ 	<!-- 비밀번호 찾기 -> 비밀번호 변경 -->
+	<update id="update_pw">
+		update ${table} set 
+		<if test='table=="TR_TRAINER"'>
+			PASSWORD = #{password}		
+			where
+			TR_EMAIL = #{email}
+		</if>
+		<if test='table=="TR_MEMBER"'>
+			PASSWORD = #{password}		
+			where
+			MEM_EMAIL = #{email}
+		</if>
+	</update>
+ 	
+ 	<!-- 트레이너의 게시글 가져오기 -->
+ 	<select id="t_postlist" resultMap="postMap">
+		select * from TR_POST where TR_EMAIL like (select concat('%', #{input}, '%')) order by post_idx desc
+	</select>
+	<resultMap id="postMap" type="Post">
+		<id column="post_idx" property="postIdx"></id>
+		<result column="tr_email" property="trEmail"></result>
+		<result column="trainer_name" property="trainerName"></result>
+		<result column="post_title" property="postTitle"></result>
+		<result column="post_cont" property="postCont"></result>
+		<result column="purpose" property="purpose"></result>
+		<result column="sports" property="sports"></result>
+		<result column="area" property="area"></result>
+		<result column="class_size" property="classSize"></result>
+		<result column="gender" property="gender"></result>
+		<result column="place" property="place"></result>
+		<result column="price" property="price"></result>
+		<result column="write_date" property="writeDate"></result>
+	</resultMap>
+	<!-- 게시글 수 -->
+	<select id="t_count" resultType="int">
+		select count(*) from TR_POST where TR_EMAIL = #{tr_email}
+	</select>
+ 	
+ 	<select id="selectTopTrainer" resultMap="trainerResult">
+ 		<![CDATA[select @rownum:=@rownum+1, t.* from (select * from TR_TRAINER t order by tr_like desc) t, (SELECT @rownum:=0) TMP where @rownum < 3]]>
+ 	</select>
+ 	
+ 	
+</mapper>

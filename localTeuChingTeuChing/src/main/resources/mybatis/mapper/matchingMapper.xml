@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Matching">
+	<resultMap id="postMap" type="Post">
+		<id column="post_idx" property="postIdx"></id>
+		<result column="tr_email" property="trEmail"></result>
+		<result column="trainer_name" property="trainerName"></result>
+		<result column="post_title" property="postTitle"></result>
+		<result column="post_cont" property="postCont"></result>
+		<result column="purpose" property="purpose"></result>
+		<result column="sports" property="sports"></result>
+		<result column="area" property="area"></result>
+		<result column="class_size" property="classSize"></result>
+		<result column="gender" property="gender"></result>
+		<result column="place" property="place"></result>
+		<result column="price" property="price"></result>
+		<result column="write_date" property="writeDate"></result>
+		<result column="photo" property="trPhoto"></result>
+	</resultMap>
+	
+	<select id="searchWord" resultMap="postMap">
+		select * from TR_POST p inner join TR_TRAINER t using(tr_email) where 
+		<if test='option.equals("trainer")'>
+			p.trainer_name like (select concat('%', #{input}, '%'))
+		</if>
+		<if test='option.equals("post")'>
+			p.post_title like (select concat('%', #{input}, '%'))
+		</if>
+		order by post_idx desc
+	</select>
+	
+	<select id="keyword" resultMap="postMap">
+		select * from TR_POST inner join TR_TRAINER using(tr_email)
+		<where>
+			<if test='!purpose.equals("null")'>
+				purpose like (select concat('%', #{purpose}, '%'))
+			</if>
+			<if test='!sports.equals("null")'>
+				and sports = #{sports}
+			</if>
+			<if test='!area.equals("null")'>
+				and area like (select concat('%', #{area}, '%'))
+			</if>
+			<if test='!classSize.equals("null")'>
+				and class_size = #{classSize}
+			</if>
+			<if test='!gender.equals("null")'>
+				and gender like (select concat('%', #{gender}, '%'))
+			</if>
+			<if test='!place.equals("null")'>
+				and place = #{place}
+			</if>
+		</where>
+		order by post_idx desc
+	</select>
+	
+	<select id="postDetail" resultMap="postMap">
+		select * from TR_POST inner join TR_TRAINER using(tr_email) where post_idx=#{postIdx}
+	</select>
+	
+	<insert id="insertPost" parameterType="Post">
+		insert into TR_POST values(0, #{trEmail}, #{trainerName}, #{postTitle}, #{postCont}, #{purpose}, #{sports}, #{area}, #{classSize}, #{gender}, #{place}, #{price}, sysdate())
+	</insert>
+	
+	<select id="selectAuto" resultType="int">
+		SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_name = 'TR_POST' AND table_schema = DATABASE();
+	</select>
+	
+	<update id="updatePost" parameterType="Post">
+		update TR_POST set post_title = #{postTitle}, post_cont = #{postCont}, purpose = #{purpose}, class_size = #{classSize}, place = #{place}, price = ${price} where post_idx = ${postIdx}
+	</update>
+	
+	<delete id="deletePost" parameterType="String">
+		delete from TR_POST where post_idx = #{postIdx}
+	</delete>
+</mapper>

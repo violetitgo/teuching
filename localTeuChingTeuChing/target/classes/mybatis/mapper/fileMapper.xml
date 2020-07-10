@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="File">
+	<insert id="report_insertFile" parameterType="File_Upload">
+		insert into TR_FILE_UPLOAD
+		values(0, ${table_idx}, #{origin_filename},
+		#{rename_filename}, #{savepath}, 'N')
+	</insert>
+	
+	<insert id="post_insertFile" parameterType="File_Upload">
+		insert into TR_FILE_UPLOAD values(0, #{table_idx}, #{origin_filename}, #{rename_filename}, #{savepath}, 'N')
+	</insert>
+	
+	<select id="post_selectFile" resultType="File_Upload">
+		select * from TR_FILE_UPLOAD where table_idx = #{postIdx} and rename_filename like '%post%' and edit_yn = 'N'
+	</select>
+	
+	<update id="post_updateFile">
+		update TR_FILE_UPLOAD set edit_yn = 'Y' where table_idx = #{postIdx}
+	</update>
+	
+	<insert id="insertQualiFile" parameterType="File_Upload">
+		INSERT INTO
+				TR_FILE_UPLOAD
+		VALUES(
+				0
+				, ${table_idx}
+				, #{origin_filename}
+				, #{rename_filename}
+				, #{savepath}
+				,'N'
+		)
+	</insert>
+	
+	<select id="selectQualiFile" resultType="string">
+		SELECT
+			RENAME_FILENAME
+		FROM
+			TR_FILE_UPLOAD
+		WHERE
+			TABLE_IDX = #{qualiidx}
+			AND
+			RENAME_FILENAME LIKE '%tr_quali%'
+	</select>
+</mapper>

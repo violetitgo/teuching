@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Review">
+
+	<resultMap id="trainermap" type="Trainer">
+		<id column="tr_email" property="tr_email"></id>
+		<result column="password" property="password"></result>
+		<result column="trainer_name" property="trainerName"></result>
+		<result column="gender" property="gender"></result>
+		<result column="weight" property="weight"></result>
+		<result column="cell" property="cell"></result>
+		<result column="career" property="career"></result>
+		<result column="address" property="address"></result>
+		<result column="adress_detail" property="adress_detail"></result>
+		<result column="prefer_add1" property="prefer_add1"></result>
+		<result column="prefer_add2" property="prefer_add2"></result>
+		<result column="prefer_add3" property="prefer_add3"></result>
+		<result column="photo" property="photo"></result>
+		<result column="purpose_keyword" property="purpose_keyword"></result>
+		<result column="tr_like" property="tr_like"></result>
+		<result column="black_yn" property="black_yn"></result>
+		<result column="is_leave_yn" property="leave_yn"></result>
+	</resultMap>
+	
+	<resultMap id="postMap" type="Post">
+		<id column="post_idx" property="postIdx"></id>
+		<result column="tr_email" property="trEmail"></result>
+		<result column="trainer_name" property="trainerName"></result>
+		<result column="post_title" property="postTitle"></result>
+		<result column="post_cont" property="postCont"></result>
+		<result column="purpose" property="purpose"></result>
+		<result column="sports" property="sports"></result>
+		<result column="area" property="area"></result>
+		<result column="class_size" property="classSize"></result>
+		<result column="gender" property="gender"></result>
+		<result column="place" property="place"></result>
+		<result column="price" property="price"></result>
+		<result column="write_date" property="writeDate"></result>
+	</resultMap>
+
+	<!-- 리뷰 업로드 -->
+	<insert id="uploadReview">
+		insert into TR_REVIEW values(0,#{trainer_name},#{tr_email}, #{mem_nickname}, #{rev_cont}, #{rev_score}, #{rev_password},'n',0,sysdate(),'n')
+	</insert> 
+	
+	<!-- 리뷰삭제 -->
+	<select id="deleteReview">
+		update TR_REVIEW set tr_leave_yn = 'y' where review_idx = #{no}
+	</select>
+
+	<!-- 삭제하지않은 리뷰의 수를 가져오기 -->
+ 	<select id="contentCnt" resultType="int">
+		select count(*) from
+		TR_REVIEW where tr_email = #{trainerEmail} and tr_leave_yn = 'n'
+	</select>
+	
+	<!-- 리뷰리스트 가져오기 -->
+	<select id="selectReviewList" resultType="Review">
+	select * from TR_REVIEW where tr_leave_yn = 'n' and tr_email = #{trainerEmail} order by ${orderby} desc limit #{page.start}, #{page.cntPerPage}
+	</select>
+	
+	<!-- 좋아요 tr_review 테이블에 업데이트 -->
+	<update id="recUpdate">
+		update TR_REVIEW set recommend = recommend + 1 where review_idx = #{no}
+	</update>
+	
+	
+	
+	<!-- 추천 수 가져오기 -->
+	<select id="getLike" resultType="int">
+		select recommend from TR_REVIEW where review_idx = #{no}
+	</select>
+	
+	<!-- 추천 한 기록을 저장해놓는 테이블에 insert -->
+	<insert id="insertreviewrrec">
+	insert into REVIEW_REC values(
+		#{no},
+		#{nickname}
+		)
+	</insert>
+	
+	<!-- 트레이너 좋아요 tr_trainer 테이블에 업데이트 -->
+	<update id="TRLikeUpdate">
+		update TR_TRAINER set tr_like = tr_like + 1 where tr_email = #{tremail}
+	</update>
+	<!-- 트레이너 좋아요 한 기록을 저장해놓는 테이블에 insert -->
+	<insert id="insertTRLikeInfo">
+	insert into TRAINER_LIKE values(#{tremail},#{memname})
+	</insert>
+	
+	<!-- 트레이너좋아요를 한 적이 있는지 없는지  -->
+	<select id="TRLikeyn"  resultType="int">
+		select count(*) from TRAINER_LIKE where trainer_email = #{tremail} and member_email = #{memname}
+	</select>
+	
+	<!-- 추천 수 가져오기 -->
+	<select id="trLikeCount" resultType="int">
+		select tr_like from TR_TRAINER where tr_email = #{tremail}
+	</select>
+	
+	<!-- 추천을 한 적이 있는지 없는지  -->
+	<select id="reviewrecyn"  resultType="int">
+		select count(*) from REVIEW_REC where mem_nickname = #{nickname} and review_idx = #{no}
+	</select>
+	
+
+	<!-- 트레이너 정보가져오기 -->
+	<select id="selectTrainerInformation" resultMap="trainermap">
+		select * from TR_TRAINER where tr_email = #{tr_email}
+	</select>
+	
+	<!-- 게시글 목록 가져오기 -->
+	<select id="selectPostList" resultMap="postMap"> 
+		select * from TR_POST where tr_email = #{trainerEmail}
+	</select>
+	
+	<!-- 신고때문에 김지수가 만들어놓은듯 -->
+	<select id="trainerquali" resultType="string">
+		SELECT
+			QUALI_AUTH
+		FROM
+			TR_QUALI
+		WHERE
+			TR_EMAIL = #{trainerEmail}
+			AND
+			AUTH_YN = 'Y'
+	</select>
+	
+	<!-- 트레이너 네임만 가져올래용 -->
+	<select id="trainername" resultType="String">
+		select trainer_name from TR_TRAINER where tr_email = #{tr_email}
+	</select>
+</mapper>

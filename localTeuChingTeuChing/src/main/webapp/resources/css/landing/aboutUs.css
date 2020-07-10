@@ -1,0 +1,129 @@
+@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+@import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
+
+/* Slide  */
+.slide_btn_wrap {
+	position: absolute;
+	list-style: none;
+	padding: 0px;
+	margin-top: 50vh;
+	margin-left: 97vw;
+	z-index: 1;
+}
+
+.slide_btn {
+	width: 13px;
+	height: 13px;
+	border-radius: 50%;
+	border: none;
+	outline: none;
+}
+
+.about_slide {
+	width: 100%;
+	height: 100vh;
+	padding: 0px;
+	overflow: hidden;
+}
+
+.slide_common {
+	width: 100%;
+	height: 100%;
+}
+
+#slide1 {
+	background: url(../../img/backImage2.jpg);
+	background-size: cover;
+}
+
+#slide2 {
+	background: url(../../img/backImage3.jpg);
+	background-size: cover;
+}
+
+#slide3 {
+	background: url(../../img/backImage4.jpg);
+	background-size: cover;
+}
+
+.blackBox {
+	background: #000000b8;
+	width: 100%;
+	height: 100%;
+	color: white;
+}
+
+.about_title {
+	color: white;
+	font-family: 'Noto Sans KR', sans-serif;
+	font-weight: bold;
+	opacity: 0;
+	margin-left: 2vw;
+	transform: translateY(100vh);
+}
+
+.about_content {
+	font-family: 'Jeju Gothic', sans-serif;
+	font-family: 'Jeju Gothic', sans-serif;
+	margin: 0px;
+	opacity: 0;
+	margin-left: 2vw;
+	transform: translateY(100vh);
+}
+
+.goModalWrap {
+	text-align: center;
+	margin-top: 75px;
+	margin-bottom: 75px;
+}
+
+.black_font {
+	color: #222c52;
+	font-family: 'Noto Sans KR', sans-serif;
+	font-weight: bold;
+}
+
+.goModal {
+	font-weight: bold;
+	display: block;
+	font-size: larger;
+	margin-top: 21px;
+}
+
+.goModal:hover {
+	color: #222c52;
+}
+
+/* Modal */
+.aboutUsModalWrap {
+	background: #000000b8;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	z-index: 2;
+	display: none;
+}
+
+.aboutUsModal {
+	background: white;
+	width: 1016px;
+	margin-left: 17vw;
+	margin-top: 26vh;
+	transform: translateY(-100vh);
+}
+
+.aboutUsModalRemove {
+	float: right;
+	font-weight: bold;
+	border: none;
+	outline: none;
+	background: none;
+	color: gray;
+	font-size: xx-large;
+	display: none;
+}
+
+.aboutUsVideo {
+	display: none;
+}

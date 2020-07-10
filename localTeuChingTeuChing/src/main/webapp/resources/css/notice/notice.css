@@ -1,0 +1,47 @@
+table {
+	margin-left: auto;
+	margin-right: auto;
+	border-spacing: 0px;
+	border: 1px solid #2c396b;
+	color: #2c396b;
+	text-align: center;
+}
+
+th, td {
+	border-bottom: 1px solid #2c396b;
+	color: #2c396b;
+	overflow: hidden;
+}
+
+h1 {
+	text-align: center;
+}
+
+.noticeTitle {
+	color: #2c396b;
+}
+
+.noticeTitle:hover {
+	color: #ffb5b5;
+}
+
+.tableHead {
+	height: 60px;
+	font-size: large;
+}
+
+.tableBody {
+	height: 50px;
+	width: 120px;
+}
+
+.tableSmaller {
+	font-size: smaller;
+}
+
+.block-27 {
+	width: 84px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 30px;
+}

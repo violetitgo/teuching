@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Manager">
+
+	<select id="selectRevReport" resultType="ReviewReport">
+		SELECT
+			*
+		FROM
+			TR_REV_REPORT
+		ORDER BY
+			REPORT_IDX DESC	
+		LIMIT
+			${start}, ${cntPerPage}
+	</select>
+
+	<select id="selectTraReport" resultType="TrainerReport">
+		SELECT
+			*
+		FROM
+			TR_TRA_REPORT
+		ORDER BY
+			REPORT_IDX DESC
+		LIMIT
+			${start}, ${cntPerPage}
+	</select>
+
+	<select id="revCnt" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TR_REV_REPORT
+	</select>
+
+	<select id="traCnt" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TR_TRA_REPORT
+	</select>
+
+	<select id="traManagerDetail" parameterType="int" resultType="TrainerReport">
+		SELECT
+			*
+		FROM
+			TR_TRA_REPORT
+		WHERE
+			REPORT_IDX = #{traid}
+	</select>
+
+	<select id="revManagerDetail" parameterType="int" resultType="ReviewReport">
+		SELECT
+			*
+		from
+			TR_REV_REPORT
+		where
+			REPORT_IDX = #{revid}
+	</select>
+
+	<update id="updateManagerDetail_rev" parameterType="ReviewReport">
+		UPDATE
+			TR_REV_REPORT
+		SET
+			REPORT_HANDEL = #{report_handel}
+			, HANDEL_CONT = #{handel_cont}
+			, ANS_YN = 'Y'
+		WHERE
+			REPORT_IDX = ${report_idx}
+	</update>
+
+	<update id="updateManagerDetail_tra" parameterType="TrainerReport">
+		UPDATE
+			TR_TRA_REPORT
+		SET
+			REPORT_HANDEL = #{report_handel}
+			, HANDEL_CONT = #{handel_cont}
+			, ANS_YN = 'Y'
+		WHERE
+			REPORT_IDX = ${report_idx}
+	</update>
+
+	<insert id="insertReportTra" parameterType="TrainerReport">
+		INSERT INTO
+				TR_TRA_REPORT
+		VALUES(
+				0
+				, #{tr_email}
+				, #{mem_email}
+				, #{rep_cont}
+				, ' '
+				, ' '
+				, SYSDATE()
+				, 'N'
+				, #{nick_name}
+		)
+	</insert>
+
+	<insert id="insertReportRev" parameterType="ReviewReport">
+		INSERT INTO
+				TR_REV_REPORT
+		VALUES(
+				0
+				, #{tr_email}
+				, #{mem_email}
+				, #{rep_cont}
+				, ' '
+				, ' '
+				, SYSDATE()
+				, 'N'
+				, #{trainer_name}
+		)
+	</insert>
+
+	<select id="selectTraReportIdx" resultType="int">
+		<!-- SELECT
+			LAST_NUMBER
+		FROM
+			USER_SEQUENCES
+		WHERE
+			SEQUENCE_NAME = 'S_TRA_REPORT_IDX'
+			 -->
+		SELECT 
+			AUTO_INCREMENT
+		FROM 
+			information_schema.tables 
+		WHERE 
+			table_name = 'TR_TRA_REPORT' 
+			AND 
+			table_schema = DATABASE();
+	</select>
+
+	<select id="selectRevReportIdx" resultType="int">
+		<!-- SELECT
+			LAST_NUMBER
+		FROM
+			USER_SEQUENCES
+		WHERE
+			SEQUENCE_NAME = 'S_REV_REPORT_IDX'
+			 -->
+		SELECT 
+			AUTO_INCREMENT
+		FROM 
+			information_schema.tables 
+		WHERE 
+			table_name = 'TR_REV_REPORT' 
+			AND 
+			table_schema = DATABASE();
+	</select>
+
+	<select id="selectTraFile" parameterType="int"
+		resultType="File_Upload">
+		SELECT
+			*
+		FROM
+			TR_FILE_UPLOAD
+		WHERE
+			TABLE_IDX = #{table_idx}
+			AND
+			RENAME_FILENAME like '%TraReport%'
+	</select>
+
+	<select id="selectRevFile" parameterType="int"
+		resultType="File_Upload">
+		SELECT
+			*
+		FROM
+			TR_FILE_UPLOAD
+		WHERE
+			TABLE_IDX = #{table_idx}
+			AND
+			RENAME_FILENAME like '%RevReport%'
+	</select>
+
+	<select id="qualiAllCnt" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TR_QUALI
+		WHERE
+			AUTH_YN = 'N'
+	</select>
+
+	<select id="selectQuali" resultType="Quali">
+		SELECT
+			*
+		FROM
+			TR_QUALI
+		WHERE
+			AUTH_YN = 'N'
+		ORDER BY
+			QUALI_IDX DESC
+		LIMIT
+			${start}, ${cntPerPage}
+	</select>
+
+	<select id="selectQualiDetail" resultType="Quali">
+		SELECT
+			*
+		FROM
+			TR_QUALI
+		WHERE
+			QUALI_IDX = #{qualiidx}
+	</select>
+	
+
+	<update id="updateQualiYn" parameterType="int">
+		UPDATE
+			TR_QUALI
+		SET
+			AUTH_YN = 'Y'
+		WHERE
+			QUALI_IDX = #{quali_idx}
+	</update>
+	
+	<select id="selectQualiIdx" resultType="int">
+		<!-- SELECT
+			LAST_NUMBER
+		FROM
+			USER_SEQUENCES
+		WHERE
+			SEQUENCE_NAME = 'S_QUALI_IDX' -->
+		SELECT
+			LAST_INSERT_ID() 
+		FROM 
+			DUAL
+	</select>
+	
+	<insert id="insertQuali" parameterType="Quali">
+		INSERT INTO
+				TR_QUALI
+		VALUES(
+				0
+				, #{quali_auth}
+				, #{tr_email}
+				, #{trainer_name}
+				, 'N'
+		)
+	</insert>
+	
+	<select id="selectTraQualiMypage" resultType="Quali">
+		SELECT
+			*
+		FROM
+			TR_QUALI
+		WHERE
+			TR_EMAIL = #{tr_email} 
+	</select>
+	<select id="selectRevReportMypage" resultType="ReviewReport">
+		SELECT
+			*
+		FROM
+			TR_REV_REPORT
+		WHERE
+			TR_EMAIL = #{tr_email} 
+	</select>
+	<select id="selectTraMatchMypage" resultType="Match">
+		SELECT
+			*
+		FROM
+			TR_MATCH
+		WHERE
+			TR_EMAIL = #{tr_email} 
+	</select>
+	
+	<!--  -->
+	<select id="selectTraReportMypage" resultType="TrainerReport">
+		SELECT
+			*
+		FROM
+			TR_TRA_REPORT
+		WHERE
+			MEM_EMAIL = #{mem_email} 
+	</select>
+	
+	<select id="selectMemMatchMypage" resultType="Match">
+		SELECT
+			*
+		FROM
+			TR_MATCH
+		WHERE
+			MEM_EMAIL = #{mem_email} 
+	</select>
+
+	<select id="selectEmailForQuali" resultType="string">
+		SELECT
+			TR_EMAIL
+		FROM
+			TR_QUALI
+		WHERE
+			QUALI_IDX = #{qualiidx}
+	</select>
+	
+	<select id="selectTrainerforQuali" resultType="Trainer">
+		SELECT
+			*
+		FROM
+			TR_TRAINER
+		WHERE 
+			TR_EMAIL = #{tr_email}
+	</select>
+	
+	<update id="updateBlackYn" parameterType="string">
+		UPDATE
+			TR_TRAINER
+		SET
+			BLACK_YN = 'Y'
+		WHERE
+			TR_EMAIL = #{tr_email}
+	</update>
+	
+	<select id="selectTremailForReviewDelete" resultType="string">
+		SELECT
+			MEM_EMAIL
+		FROM
+			TR_MEMBER
+		WHERE
+			NICKNAME = #{nick_name}
+	</select>
+	
+	<select id="checkForReviewDelete" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TR_REVIEW
+		WHERE
+			TR_EMAIL = #{tr_email}	
+			AND
+			MEM_NICKNAME = #{nick_name}
+	</select>	
+</mapper>

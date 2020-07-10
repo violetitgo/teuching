@@ -1,0 +1,29 @@
+@charset "UTF-8";
+
+html, body, form {
+	height: 100%;
+	width: 99%;
+	margin-left: 1%;
+}
+
+#textarea {
+	width: 95%;
+	height: 150px;
+	margin: 2% 1% 1% 1%;
+	border-radius: 4px;
+	border: 1px solid lightgray;
+	transform: translateX(-1%);
+}
+
+#btn {
+	height: 35px;
+	width: 75px;
+	float: right;
+	transform: translateX(-25%);
+	border:1px solid lightgray;
+	background-color:white;
+}
+
+.form-control, input-group date {
+	width: 50%;
+}
