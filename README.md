@@ -1,5 +1,5 @@
 # Teu-Ching
-https://github.com/violetitgo/teuching
+http://52.78.116.59:8080/teuching/index/index.do
 --------
 
 
